@@ -1,0 +1,4 @@
+module RoundedQR {
+    header "rounded_qr.h"
+    export *
+}

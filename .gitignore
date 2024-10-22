@@ -1,1 +1,7 @@
 /target
+.build/
+
+.DS_Store
+*.xcframework
+.xcframework-intermediate
+*.xcframework.zip
