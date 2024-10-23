@@ -23,8 +23,8 @@ let package = Package(
         ),
         .binaryTarget(
             name: "RoundedQR",
-            url: "https://github.com/ktiays/rounded-qr/releases/download/v0.1.0/RoundedQR.xcframework.zip",
-            checksum: "f5897450e2399de444139d24c8eed85041e65848ebb33c650096a75d4e89a8b9"
+            url: "https://github.com/ktiays/rounded-qr/releases/download/v0.1.1/RoundedQR.xcframework.zip",
+            checksum: "058af7c6ed4e35707a74b4ede72f7d9878dc81092ec1243c39bdc0ff3fd5df8f"
         ),
     ]
 )
