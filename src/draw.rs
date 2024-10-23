@@ -249,6 +249,28 @@ pub(crate) fn draw(code: QrCode, size: Size, recorder: &mut DisplayListRecorder)
             .expect("should have value");
         let mut start_edge = UnitEdge::TOP;
 
+        /// The type of the radius.
+        enum RadiusType {
+            Large,
+            Medium,
+            Normal,
+        }
+
+        let radius_type = if unit_ids.contains(&(0, 0))
+            || unit_ids.contains(&(0, code.size() - 1))
+            || unit_ids.contains(&(code.size() - 1, 0))
+        {
+            // The large radius is used for the corners of the QR code.
+            RadiusType::Large
+        } else if unit_ids.contains(&(2, 2))
+            || unit_ids.contains(&(2, code.size() - 3))
+            || unit_ids.contains(&(code.size() - 3, 2))
+        {
+            RadiusType::Medium
+        } else {
+            RadiusType::Normal
+        };
+
         loop {
             let unit = unit_map.get_mut(&next).expect("should get unit");
 
@@ -358,7 +380,20 @@ pub(crate) fn draw(code: QrCode, size: Size, recorder: &mut DisplayListRecorder)
             let is_clockwise = Segment::is_clockwise(a, b);
 
             let a_adj = corners.entry(current_idx).or_insert(DrawAdj::default());
-            let radius = if is_clockwise { 0.5 } else { 0.25 };
+            let radius = if is_clockwise {
+                let radius_factor = match radius_type {
+                    RadiusType::Large => 4.2_f64,
+                    RadiusType::Medium => 1.2_f64,
+                    RadiusType::Normal => 1_f64,
+                };
+                0.5 * radius_factor
+            } else {
+                if matches!(radius_type, RadiusType::Large) {
+                    1.3_f64
+                } else {
+                    0.25
+                }
+            };
             a_adj.end_offset = radius;
             a_adj.corner_radius = radius;
             a_adj.corner_direction = (
